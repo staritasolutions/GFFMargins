@@ -6,24 +6,10 @@ tagList(
 )
 }
 
-mod_rates_table_client_server <- function(id, rates_df){
+mod_rates_table_client_server <- function(id, client_rates_df){
   moduleServer(id, function(input, output, session){
   ns <- session$ns
     
-    client_rates_df <- reactive({
-      rates_df() |> 
-        group_by(customer_ref) |> 
-        summarize(Revenue = sum(amt, na.rm = TRUE),
-                  Hours = sum(hours, na.rm = TRUE),
-                  Cost = sum(cost, na.rm = TRUE),
-                  `Hourly Revenue` = ifelse(Hours == 0, Revenue, Revenue/Hours),
-                  `Hourly Cost` = ifelse(Hours == 0, Cost, Cost/Hours),
-                  Profit = Revenue - Cost,
-                  `Hourly Profit` = ifelse(Hours == 0, Profit, Profit/Hours),
-                  `Profit Margin` = Profit/Revenue) |> 
-        ungroup() |> 
-        rename(Client = customer_ref)
-    })
 
     output$client_table <- render_gt(
       gt(client_rates_df()) %>%
@@ -80,7 +66,7 @@ mod_rates_table_client_server <- function(id, rates_df){
           opt_interactive(
             use_pagination = TRUE,
             use_sorting = TRUE,
-            page_size_default = 20,
+            page_size_default = 10,
             use_search = TRUE)
       )
     
