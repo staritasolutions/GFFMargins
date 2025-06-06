@@ -57,22 +57,23 @@ ui <- page_navbar(
 
       h4("Overview"),
           card(
-            card_header = "Overview",
+            card_header("Overview"),
             input_switch("exclude_setup", "Exclude Setup/Dev Fees", value = TRUE),
             mod_rates_table_client_ui("rates_table_client")
           ),
-       h4("Hourly Profit Distribution"),
+       h4("Hours vs. Revenue"),
           card(
-            card_header = "Distribution",
-            sliderInput( 
-              "rate_range", "Range", 
-              min = 0,
-              max = 40000,
-              value = c(0, 1000),
-              step = 100,
-              round = TRUE
-            ), 
-            mod_rates_histogram_ui("rates_histogram")
+            card_header("Quadrant Plot"),
+            #sliderInput( 
+            #  "rate_range", "Range", 
+            #  min = 0,
+            #  max = 40000,
+            #  value = c(0, 1000),
+            #  step = 100,
+            #  round = TRUE
+            #), 
+            mod_rates_quadrant_ui("rates_quadrant")
+            #mod_rates_histogram_ui("rates_histogram")
           )   
 
     )
@@ -94,7 +95,7 @@ ui <- page_navbar(
           mod_date_select_ui("date1",start = floor_date(Sys.Date(), unit = "year")-years(1))
 
         ),
-        h4("Client Drilldown"),
+        h4(textOutput("drilldown_header")),
         mod_general_select_ui("client1", "Client", rates_df, "customer_ref", selected_count = 1),
           card(
             card_header("By Month"),
@@ -107,10 +108,10 @@ ui <- page_navbar(
             full_screen = FALSE,
             pickerInput("monthly_metric",
                           choices = c("Revenue","Hours","Cost",
-                                      "Hourly Revenue","Hourly Cost","Profit",
-                                      "Hourly Profit", "Profit Margin"),
+                                      "Hourly Revenue","Hourly Cost","Gross",
+                                      "Hourly Gross", "Gross Margin"),
                           multiple = FALSE,
-                          selected = "Hourly Profit",
+                          selected = "Gross",
                           options = pickerOptions(actionsBox = TRUE,
                                                   liveSearch = TRUE,
                                                   title = "Metric")

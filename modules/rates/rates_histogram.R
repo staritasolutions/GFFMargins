@@ -11,14 +11,14 @@ mod_rates_histogram_server <- function(id, client_rates_df, range){
 
       plt_df <- reactive({
         client_rates_df() |> 
-          filter(`Hourly Profit` >= range()$start & `Hourly Profit` <= range()$end)
+          filter(`Hourly Gross` >= range()$start & `Hourly Gross` <= range()$end)
       })
       
   
     plt <- reactive({
-      ggplot(data = plt_df(), aes(x = `Hourly Profit`)) +
+      ggplot(data = plt_df(), aes(x = `Hourly Gross`)) +
         geom_histogram_interactive(aes(tooltip = after_stat(count)),fill = "#4c86a8", color = "black") +
-        labs(x = "Hourly Profit",
+        labs(x = "Hourly Gross",
              y = "Count") +
         scale_x_continuous(labels = scales::dollar) +
         theme(panel.grid.major.x = element_blank(),

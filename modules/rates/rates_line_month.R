@@ -14,7 +14,7 @@ mod_line_month_ui <- function(id) {
           30
         } else if (metric() == "Revenue") {
           5000
-        } else if (metric() == "Profit Margin") {
+        } else if (metric() == "Gross Margin") {
           .9
         } else {
           100

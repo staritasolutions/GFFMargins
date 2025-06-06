@@ -33,11 +33,11 @@ mod_rates_table_client_server <- function(id, client_rates_df){
           decimals = 0
         ) %>%
         fmt_percent(
-          columns = c("Profit Margin"),
+          columns = c("Gross Margin"),
           decimals = 0
         ) %>%
         fmt_currency(
-          columns = c("Revenue", "Cost", "Hourly Revenue", "Hourly Cost", "Profit", "Hourly Profit"),
+          columns = c("Revenue", "Cost", "Hourly Revenue", "Hourly Cost", "Gross", "Hourly Gross"),
           decimals = 2
         ) %>%
         tab_options(
@@ -54,11 +54,11 @@ mod_rates_table_client_server <- function(id, client_rates_df){
           )
         ) %>%
         data_color(
-          columns = `Profit Margin`,
+          columns = `Gross Margin`,
           method = "numeric",
           palette = c("#a60030","#ffffff", "#00a676"),
           domain = c(0,1)
-          #domain = c(min(client_rates_df()$`Profit Margin`, na.rm = TRUE), max(client_rates_df()$`Profit Margin`, na.rm = TRUE))
+          #domain = c(min(client_rates_df()$`Gross Margin`, na.rm = TRUE), max(client_rates_df()$`Gross Margin`, na.rm = TRUE))
         ) %>%
         sub_missing(
           missing_text = "---"

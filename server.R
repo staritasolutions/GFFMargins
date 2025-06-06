@@ -12,15 +12,15 @@ server <- function(input, output, session) {
                   Cost = sum(cost, na.rm = TRUE),
                   `Hourly Revenue` = ifelse(Hours == 0, Revenue, Revenue/Hours),
                   `Hourly Cost` = ifelse(Hours == 0, Cost, Cost/Hours),
-                  Profit = Revenue - Cost,
-                  `Hourly Profit` = ifelse(Hours == 0, Profit, Profit/Hours),
-                  `Profit Margin` = Profit/Revenue) |> 
+                  Gross = Revenue - Cost,
+                  `Hourly Gross` = ifelse(Hours == 0, Gross, Gross/Hours),
+                  `Gross Margin` = Gross/Revenue) |> 
         ungroup() |> 
         rename(Client = customer_ref)
   })
 
   observeEvent(date0_1$start(), {
-    profit_values <- overview_df()$`Hourly Profit`
+    profit_values <- overview_df()$`Hourly Gross`
     updateSliderInput(
       session,
       inputId = "rate_range",
@@ -35,11 +35,19 @@ server <- function(input, output, session) {
   slider_vals <- reactive(list(start = input$rate_range[1], end = input$rate_range[2]))
   mod_rates_histogram_server("rates_histogram", overview_df, slider_vals)
 
+  mod_rates_quadrant_server("rates_quadrant", overview_df)
+
 
 # Drilldown Tab ----------------------------------------------------------
   
   date1 <- mod_date_select_server("date1")
   clients <- mod_general_select_server("client1")
+
+ output$drilldown_header <- renderText({
+  paste0("Client: ", paste(clients(), collapse = ", "))
+})
+
+
 
   monthly_df <- reactive({
     rates_df |> 
@@ -51,9 +59,9 @@ server <- function(input, output, session) {
                   Cost = sum(cost, na.rm = TRUE),
                   `Hourly Revenue` = ifelse(Hours == 0, Revenue, Revenue/Hours),
                   `Hourly Cost` = ifelse(Hours == 0, Cost, Cost/Hours),
-                 Profit = Revenue - Cost,
-                  `Hourly Profit` = ifelse(Hours == 0, Profit, Profit/Hours),
-                  `Profit Margin` = Profit/Revenue) |> 
+                 Gross = Revenue - Cost,
+                  `Hourly Gross` = ifelse(Hours == 0, Gross, Gross/Hours),
+                  `Gross Margin` = Gross/Revenue) |> 
         ungroup() |> 
       rename(Date = month)
   })
