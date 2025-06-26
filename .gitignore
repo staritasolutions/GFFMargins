@@ -1,3 +1,6 @@
 .env
 imports/
 sheets_service_account.json
+.Rproj.user
+.Rhistory
+GetFoundFirstMargins.dcf
