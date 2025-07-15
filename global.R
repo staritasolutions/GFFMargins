@@ -44,7 +44,7 @@ hours_df <- tbl(con, "Hours")
 invoices_df <- tbl(con, "Invoices")
 
 
-date_updated <- as.Date(file.info("imports/harvest/time_entries.rds")$mtime)
+date_updated <- today()
 
 
 # Modules ----------------------------------------------------------------
