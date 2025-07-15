@@ -26,7 +26,7 @@ ui <- page_navbar(
     spacer = "0.75rem"
   ),
 
-  title = strong("Get Found First Margins Dashboard 2"),
+  title = strong("Get Found First Margins Dashboard"),
   underline = FALSE,
   tags$head(
     tags$style(HTML(
