@@ -103,7 +103,7 @@ ui <- page_navbar(
       mod_general_select_ui(
         "client1",
         "Client",
-        rates_df,
+        invoices_df |> count(final_client) |> collect(),
         "final_client",
         selected_count = 1
       ),

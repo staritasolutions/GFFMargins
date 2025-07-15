@@ -15,14 +15,33 @@ library(DT)
 library(plotly)
 library(fontawesome)
 library(janitor)
+library(DBI)
+library(duckdb)
+
+
+# Load in environment variables
+dotenv::load_dot_env()
+
+# Connect to database ----------------------------------------------------
+
+con <- dbConnect(duckdb::duckdb())
+dbExecute(con, "INSTALL 'motherduck';")
+dbExecute(con, "LOAD 'motherduck'")
+#dbExecute(con, "ATTACH 'md:'")
+auth_query <- glue::glue_sql(
+  "SET motherduck_token= {`Sys.getenv('MD_TOKEN')`};",
+  .con = con
+)
+DBI::dbExecute(con, auth_query)
+# Connect to MotherDuck
+DBI::dbExecute(con, "PRAGMA MD_CONNECT")
+dbExecute(con, "USE gff")
 
 # Data -------------------------------------------------------------------
 
-wages_df <- readRDS("imports/employees/wages.rds")
-hours_df <- readRDS("imports/harvest/time_entries.rds")
-invoices_df <- readRDS("imports/quickbooks/invoices.rds") |>
-  clean_names() |>
-  mutate(month = as.Date(month))
+wages_df <- tbl(con, "Wages")
+hours_df <- tbl(con, "Hours")
+invoices_df <- tbl(con, "Invoices")
 
 
 date_updated <- as.Date(file.info("imports/harvest/time_entries.rds")$mtime)

@@ -10,7 +10,9 @@ server <- function(input, output, session) {
       summarize(
         Revenue = sum(amt, na.rm = TRUE),
         Hours = sum(hours, na.rm = TRUE),
-        Cost = sum(cost, na.rm = TRUE),
+        Cost = sum(cost, na.rm = TRUE)
+      ) |>
+      mutate(
         `Hourly Revenue` = ifelse(Hours == 0, Revenue, Revenue / Hours),
         `Hourly Cost` = ifelse(Hours == 0, Cost, Cost / Hours),
         Gross = Revenue - Cost,
@@ -18,7 +20,8 @@ server <- function(input, output, session) {
         `Gross Margin` = Gross / Revenue
       ) |>
       ungroup() |>
-      rename(Client = final_client)
+      rename(Client = final_client) |>
+      collect()
   })
 
   observeEvent(date0_1$start(), {
@@ -52,14 +55,19 @@ server <- function(input, output, session) {
   })
 
   monthly_df <- reactive({
+    client_vals <- reactive(clients())
+
     rates_df |>
       filter(month >= date1$start() & month <= date1$end()) |>
+      collect() |>
       filter(final_client %in% clients()) |>
       group_by(month) |>
       summarize(
         Revenue = sum(amt, na.rm = TRUE),
         Hours = sum(hours, na.rm = TRUE),
-        Cost = sum(cost, na.rm = TRUE),
+        Cost = sum(cost, na.rm = TRUE)
+      ) |>
+      mutate(
         `Hourly Revenue` = ifelse(Hours == 0, Revenue, Revenue / Hours),
         `Hourly Cost` = ifelse(Hours == 0, Cost, Cost / Hours),
         Gross = Revenue - Cost,
