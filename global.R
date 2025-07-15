@@ -20,7 +20,7 @@ library(duckdb)
 
 
 # Load in environment variables
-dotenv::load_dot_env()
+# dotenv::load_dot_env()
 
 # Connect to database ----------------------------------------------------
 
