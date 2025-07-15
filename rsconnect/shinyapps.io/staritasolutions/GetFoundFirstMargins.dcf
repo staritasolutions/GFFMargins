@@ -5,9 +5,6 @@ account: staritasolutions
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 14906372
-bundleId: 10424730
+bundleId: 10610271
 url: https://staritasolutions.shinyapps.io/GetFoundFirstMargins/
 version: 1
-asMultiple: FALSE
-asStatic: FALSE
-ignoredFiles: .env|.Rprofile|data/gusto/employees.R|data/harvest/hours.R|data/quickbooks/invoices.py|data/quickbooks/rates.R|sheets_service_account.json

@@ -27,4 +27,22 @@ final_wages <- raw_wages |>
   select(employee_name, hourly_rate)
 
 
-saveRDS(final_wages, "imports/employees/wages.rds")
+# DB Connection ----------------------------------------------------------
+
+dotenv::load_dot_env()
+
+con <- dbConnect(duckdb::duckdb())
+dbExecute(con, "INSTALL 'motherduck';")
+dbExecute(con, "LOAD 'motherduck'")
+#dbExecute(con, "ATTACH 'md:'")
+auth_query <- glue::glue_sql(
+  "SET motherduck_token= {`Sys.getenv('MD_UPDATE_TOKEN')`};",
+  .con = con
+)
+DBI::dbExecute(con, auth_query)
+# Connect to MotherDuck
+DBI::dbExecute(con, "PRAGMA MD_CONNECT")
+dbExecute(con, "USE gff")
+
+
+dbWriteTable(con, "Wages", final_wages, overwrite = TRUE)

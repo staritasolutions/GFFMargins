@@ -6,12 +6,27 @@ library(janitor)
 library(lubridate)
 
 
-# Get client references
-
-client_ref_df <- readRDS("imports/harvest/harvest_ref.rds")
-
 # Load in environment variables
 dotenv::load_dot_env()
+
+# DB Connection ----------------------------------------------------------
+
+con <- dbConnect(duckdb::duckdb())
+dbExecute(con, "INSTALL 'motherduck';")
+dbExecute(con, "LOAD 'motherduck'")
+#dbExecute(con, "ATTACH 'md:'")
+auth_query <- glue::glue_sql(
+  "SET motherduck_token= {`Sys.getenv('MD_UPDATE_TOKEN')`};",
+  .con = con
+)
+DBI::dbExecute(con, auth_query)
+# Connect to MotherDuck
+DBI::dbExecute(con, "PRAGMA MD_CONNECT")
+dbExecute(con, "USE gff")
+
+# Get client references
+
+client_ref_df <- tbl(con, "HarvestClientRef") |> collect()
 
 ## Authorization ##
 
@@ -94,7 +109,19 @@ final_time_df <- time_df |>
   mutate(
     final_client = ifelse(is.na(final_client), client, final_client)
   ) |>
-  clean_names()
+  clean_names() |>
+  dplyr::select(
+    id = id_1,
+    spent_date,
+    hours,
+    notes,
+    billable,
+    employee,
+    client,
+    project,
+    task,
+    final_client
+  )
 
 
-saveRDS(final_time_df, "imports/harvest/time_entries.rds")
+dbWriteTable(con, "Hours", final_time_df, overwrite = TRUE)
