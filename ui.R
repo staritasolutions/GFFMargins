@@ -62,7 +62,6 @@ ui <- page_navbar(
       h4("Overview"),
       card(
         card_header("Overview"),
-        input_switch("exclude_setup", "Exclude Setup/Dev Fees", value = TRUE),
         mod_rates_table_client_ui("rates_table_client")
       ),
       h4("Hours vs. Revenue"),
@@ -141,24 +140,27 @@ ui <- page_navbar(
     )
   ),
 
-  nav_panel(
-    title = "Data Issues",
-    icon = fa("circle-exclamation", height = "1rem"),
-    align = "left",
+  # Data Exploration -------------------------------------------------------
 
-    page_sidebar(
-      fillable = FALSE,
+  nav_menu(
+    title = "Data Exploration",
+    icon = fa("table", height = "1rem"),
 
-      sidebar = sidebar(
-        width = 300,
-        mod_date_select_ui(
-          "date2",
-          start = floor_date(Sys.Date(), unit = "year") - years(1)
-        )
-      ),
-      h4("Inconsistencies"),
-      markdown(
-        "The purpose of this page is to:
+    nav_panel(
+      title = "Reconciliation",
+      page_sidebar(
+        fillable = FALSE,
+
+        sidebar = sidebar(
+          width = 300,
+          mod_date_select_ui(
+            "date2",
+            start = floor_date(Sys.Date(), unit = "year") - years(1)
+          )
+        ),
+        h4("Inconsistencies"),
+        markdown(
+          "The purpose of this page is to:
 
           **1. Identify hours/invoices that aren't properly being connected within the app**
 
@@ -169,18 +171,82 @@ ui <- page_navbar(
 
           **3. Flag clients who have been invoiced but have no logged hours**
           "
-      ),
-
-      layout_columns(
-        card(
-          card_header("Hours w/out Invoice"),
-          full_screen = FALSE,
-          mod_hours_noinvoice_table_ui("hours_noinvoice_table")
         ),
-        card(
-          card_header("Invoice w/out Hours"),
-          full_screen = FALSE,
-          mod_invoice_nohours_table_ui("invoice_nohours_table")
+
+        layout_columns(
+          card(
+            card_header("Hours w/out Invoice"),
+            full_screen = FALSE,
+            mod_hours_noinvoice_table_ui("hours_noinvoice_table")
+          ),
+          card(
+            card_header("Invoice w/out Hours"),
+            full_screen = FALSE,
+            mod_invoice_nohours_table_ui("invoice_nohours_table")
+          )
+        )
+      )
+    ),
+    nav_panel(
+      title = "Task Exploration",
+      page_sidebar(
+        fillable = FALSE,
+        sidebar = sidebar(
+          width = 400,
+          mod_date_select_ui(
+            "date2_1",
+            start = floor_date(Sys.Date(), unit = "year") - years(1)
+          ),
+          mod_general_select_ui(
+            "client2_1",
+            "Client",
+            hours_df |> count(final_client) |> collect(),
+            "final_client",
+            select_multiple = FALSE
+          )
+        ),
+        h3(textOutput("task_header")),
+        layout_columns(
+          column(
+            width = 12,
+            h4("Hours"),
+            # pickerInput(
+            #   "tasks2_1_test",
+            #   choices = hours_df |>
+            #     count(task) |>
+            #     arrange(task) |>
+            #     collect() |>
+            #     pull(task),
+            #   multiple = TRUE,
+            #   selected = c(
+            #     "Website Development",
+            #     "Website Development - Production",
+            #     "Website Development - QC Off-Shore Work",
+            #     "Website Development - Revisions",
+            #     "SEO Setup"
+            #   ),
+            #   options = pickerOptions(
+            #     actionsBox = TRUE,
+            #     liveSearch = TRUE,
+            #     selectedTextFormat = "static",
+            #     title = "Task"
+            #   )
+            # ),
+
+            input_switch("project_only", "Project Tasks Only", value = TRUE),
+            # mod_general_select_ui(
+            #   "tasks2_1",
+            #   "Task",
+            #   hours_df |> count(task) |> collect(),
+            #   "task",
+            # ),
+            mod_hours_task_table_client_ui("hours_task_table")
+          ),
+          column(
+            width = 12,
+            h4("Invoices"),
+            mod_invoices_task_table_client_ui("invoices_task_table")
+          )
         )
       )
     )
