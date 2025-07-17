@@ -38,9 +38,9 @@ clients_df <- clients_raw$clients |>
 # Code to see which clients are new
 
 # Connect to Database
-con <- dbConnect(duckdb::duckdb())
-dbExecute(con, "INSTALL 'motherduck';")
-dbExecute(con, "LOAD 'motherduck'")
+con <- DBI::dbConnect(duckdb::duckdb())
+DBI::dbExecute(con, "INSTALL 'motherduck';")
+DBI::dbExecute(con, "LOAD 'motherduck'")
 #dbExecute(con, "ATTACH 'md:'")
 auth_query <- glue::glue_sql(
   "SET motherduck_token= {`Sys.getenv('MD_UPDATE_TOKEN')`};",
@@ -49,7 +49,7 @@ auth_query <- glue::glue_sql(
 DBI::dbExecute(con, auth_query)
 # Connect to MotherDuck
 DBI::dbExecute(con, "PRAGMA MD_CONNECT")
-dbExecute(con, "USE gff")
+DBI::dbExecute(con, "USE gff")
 
 # get current db clients
 current_clients <- tbl(con, "HarvestClientRef") |> collect()

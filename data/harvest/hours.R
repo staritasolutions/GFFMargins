@@ -4,6 +4,7 @@ library(httr2)
 library(jsonlite)
 library(janitor)
 library(lubridate)
+library(DBI)
 
 
 # Load in environment variables
