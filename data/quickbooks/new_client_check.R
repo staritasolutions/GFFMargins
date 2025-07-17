@@ -30,10 +30,14 @@ DBI::dbExecute(con, "PRAGMA MD_CONNECT")
 dbExecute(con, "USE gff")
 
 # get current db clients
-current_clients <- tbl(con, "QuickBooksClientRef") |> collect()
+current_clients <- tbl(con, "QuickBooksClientRef") |>
+  collect() |>
+  pull(qb_client)
 
 new_clients <- clients_df |>
-  filter(!client_name %in% current_clients$qb_client)
+  mutate(clean_name = str_squish(client_name)) |> # trims and squishes spaces
+  filter(!clean_name %in% str_squish(current_clients)) |>
+  select(client_name)
 
 # email new clients
 gm_auth(
