@@ -36,7 +36,8 @@ mod_invoice_nohours_table_server <- function(id, hours_df, invoices_df, date) {
         filter(is.na(hours)) |>
         mutate(hours = 0) |>
         arrange(desc(amount)) |>
-        rename(Client = final_client, Hours = hours, Amount = amount)
+        rename(Client = final_client, Hours = hours, Amount = amount) |>
+        collect()
     })
 
     output$tbl <- render_gt(

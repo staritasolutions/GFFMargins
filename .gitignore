@@ -4,3 +4,6 @@ sheets_service_account.json
 .Rproj.user
 .Rhistory
 GetFoundFirstMargins.dcf
+gmailr-token.rds
+venv/
+venv311/
