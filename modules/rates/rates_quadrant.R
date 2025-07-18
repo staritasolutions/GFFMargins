@@ -32,7 +32,7 @@ mod_rates_quadrant_server <- function(id, client_rates_df) {
       x_range <- range(temp_df()$Hours, na.rm = TRUE)
       y_range <- range(temp_df()$Revenue, na.rm = TRUE)
 
-      x_pad <- (x_range[2] - x_range[1]) * 0.2
+      x_pad <- (x_range[2] - x_range[1]) * 0.3
       y_pad <- (y_range[2] - y_range[1]) * 0.1
 
       tibble(
@@ -47,7 +47,7 @@ mod_rates_quadrant_server <- function(id, client_rates_df) {
           y_range[2] - y_pad,
           y_range[2] - y_pad,
           y_range[1] - y_pad,
-          y_range[1] + y_pad
+          y_range[1] - y_pad
         )
       )
     })
