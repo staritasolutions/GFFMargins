@@ -51,7 +51,11 @@ server <- function(input, output, session) {
   clients <- mod_general_select_server("client1")
 
   output$drilldown_header <- renderText({
-    paste0("Client: ", paste(clients(), collapse = ", "))
+    if (length(clients()) > 3) {
+      "Client: Multiple Clients"
+    } else {
+      paste0("Client: ", paste(clients(), collapse = ", "))
+    }
   })
 
   monthly_df <- reactive({
