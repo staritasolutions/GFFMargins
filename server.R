@@ -21,6 +21,7 @@ server <- function(input, output, session) {
       ) |>
       ungroup() |>
       rename(Client = final_client) |>
+      arrange(desc(Revenue)) |>
       collect()
   })
 
