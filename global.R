@@ -41,7 +41,8 @@ dbExecute(con, "USE gff")
 
 wages_df <- tbl(con, "Wages")
 hours_df <- tbl(con, "Hours")
-invoices_df <- tbl(con, "Invoices")
+invoices_df <- tbl(con, "Invoices") |>
+  filter(!str_detect(tolower(description), "pass through"))
 
 
 date_updated <- today()
