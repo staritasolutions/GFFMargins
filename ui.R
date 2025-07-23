@@ -56,7 +56,7 @@ ui <- page_navbar(
 
       sidebar = sidebar(
         width = 300,
-        mod_date_select_ui("date0", end = floor_date(today(), "month"))
+        mod_date_select_ui("date0", end = floor_date(today(), "month") - 1)
       ),
 
       h4("Overview"),
@@ -96,7 +96,7 @@ ui <- page_navbar(
         mod_date_select_ui(
           "date1",
           start = floor_date(Sys.Date(), unit = "year") - years(1),
-          end = floor_date(today(), "month")
+          end = floor_date(today(), "month") - 1
         )
       ),
       h4(textOutput("drilldown_header")),
@@ -157,7 +157,7 @@ ui <- page_navbar(
           mod_date_select_ui(
             "date2",
             start = floor_date(Sys.Date(), unit = "year") - years(1),
-            end = floor_date(today(), "month")
+            end = floor_date(today(), "month") - 1
           )
         ),
         h4("Inconsistencies"),
@@ -198,7 +198,7 @@ ui <- page_navbar(
           mod_date_select_ui(
             "date2_1",
             start = floor_date(Sys.Date(), unit = "year") - years(1),
-            end = floor_date(today(), "month")
+            end = floor_date(today(), "month") - 1
           ),
           mod_general_select_ui(
             "client2_1",
