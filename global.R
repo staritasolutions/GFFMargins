@@ -29,7 +29,7 @@ dbExecute(con, "INSTALL 'motherduck';")
 dbExecute(con, "LOAD 'motherduck'")
 #dbExecute(con, "ATTACH 'md:'")
 auth_query <- glue::glue_sql(
-  "SET motherduck_token= {`Sys.getenv('MD_TOKEN')`};",
+  "SET motherduck_token= {`Sys.getenv('MD_UPDATE_TOKEN')`};",
   .con = con
 )
 DBI::dbExecute(con, auth_query)
